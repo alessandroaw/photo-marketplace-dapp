@@ -13,7 +13,17 @@ module.exports = {
 			{ test: /\.js$/, use: 'babel-loader' },
 			{ test: /\.vue$/, use: 'vue-loader' },
 			{ test: /\.css$/, use: ['vue-style-loader', 'css-loader'] },
-			{ test: /\.(png|jpg|gif|svg)$/, use: 'file-loader' },
+			{
+				test: /\.(png|jpe?g|gif|svg)$/,
+				use: {
+					loader: 'file-loader',
+					options: {
+						name: '[name].[hash].[ext]',
+						outputPath: 'assets',
+						esModule: false,
+					},
+				},
+			},
 		],
 	},
 	plugins: [
@@ -24,7 +34,7 @@ module.exports = {
 	],
 	resolve: {
 		alias: {
-			vue$: 'vue/dist/vue',
+			'@': path.resolve('src'),
 		},
 	},
 };

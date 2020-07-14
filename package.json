@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "webpack-dev-server --config ./webpack.config.js --mode development"
+    "serve": "webpack-dev-server --config ./webpack.config.js --mode development",
+    "build": "rimraf dist && webpack --config ./webpack.config.js --mode production",
+    "lint": "./node_modules/.bin/eslint src/main.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +23,7 @@
     "css-loader": "^3.6.0",
     "eslint": "^7.4.0",
     "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-import-resolver-webpack": "^0.12.2",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-vue": "^6.2.2",
     "file-loader": "^6.0.0",

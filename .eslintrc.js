@@ -20,4 +20,7 @@ module.exports = {
 		'no-tabs': 'off',
 		indent: ['error', 'tab'],
 	},
+	settings: {
+		'import/resolver': 'webpack',
+	},
 };
