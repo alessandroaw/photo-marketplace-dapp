@@ -1,14 +1,13 @@
 <template>
-	<footer class="bg-light">
+	<footer class="footer bg-dark text-white">
 		<div class="container">
-		<router-link class="logo-font" :to="{ name: 'home', params: {} }">
+		<router-link class="logo-font text-white" :to="{ name: 'home', params: {} }">
 			DSPM
 		</router-link>
 		<span class="attribution">
 			Proyek tugas akhir
-			<a target="blank" href="https://thinkster.io"
-			>TheRealSandro</a
-			>
+			<a class="text-white" href="https://thinkster.io"
+			><i>TheRealSandro</i></a>
 		</span>
 		</div>
 	</footer>

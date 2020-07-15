@@ -23,7 +23,8 @@
 						<input :value="tags" type="text" class="form-control" id="tags">
 						<small class="form-text text-muted">Tag untuk pencarian foto</small>
 					</div>
-					<button @click.prevent="submitPhoto" class="btn btn-primary float-right" type="submit">Submit</button>
+					<button class="btn btn-primary float-right" type="submit"
+						@click.prevent="submitPhoto">Submit</button>
 				</div>
 			</div>
 		</form>

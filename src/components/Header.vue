@@ -2,7 +2,7 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <a href="#" class="navbar-brand">DSPM</a>
+        <a href="#" class="navbar-brand logo-font">DSPM</a>
         <button class="navbar-toggler" type="button"
           data-toggle="collapse" data-target="#navbarMenu">
           <span class="navbar-toggler-icon"></span>
