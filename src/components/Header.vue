@@ -9,9 +9,24 @@
         </button>
         <div id="navbarMenu" class="collapse navbar-collapse justify-content-end">
           <ul class="navbar-nav">
-            <li class="nav-item"><a href="/" class="nav-link active">Home</a></li>
-            <li class="nav-item"><a href="/cart.html" class="nav-link">Keranjang</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Foto</a></li>
+            <li class="nav-item">
+              <router-link
+                class="nav-link"
+                active-class="active"
+                exact
+                :to="{ name: 'home' }"
+              >Home
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link
+                class="nav-link"
+                active-class="active"
+                exact
+                :to="{ name: 'photographer' }"
+              >Fotografer
+              </router-link>
+            </li>
           </ul>
         </div>
       </div>

@@ -7,8 +7,7 @@
                     {{message}}
                 </p>
                 <p>
-                    <a v-for="tag in photoTags" href="#"
-						class="btn btn-info py-0 px-1 mb-1">{{tag}}</a>
+                    <a v-for="tag in photoTags" href="#" class="badge badge-info mr-1">{{tag}}</a>
                 </p>
                 <div class="d-flex justify-content-between align-items-center">
                     <strong class="text-muted">Rp 10.000</strong>

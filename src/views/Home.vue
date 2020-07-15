@@ -1,11 +1,11 @@
 <template>
 	<main role="main">
         <app-search-bar></app-search-bar>
-        <section class="album py-5 bg-light">
+        <section class="album py-5">
             <div class="container">
                 <div class="row">
 					<app-photo
-						imgSrc="../assets/laptop.jpg"
+						:imgSrc="imgSrc"
 						:message="message"
 						:photoTags="photoTags"
 						></app-photo>
