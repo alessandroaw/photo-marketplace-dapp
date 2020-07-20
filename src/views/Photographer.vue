@@ -5,22 +5,22 @@
 				<div class="col-md-6">
 					<div class="form-group">
 						<label for="image">Foto</label>
-						<input :value="image" type="text" class="form-control" id="image">
+						<input :value="photo.image" type="text" class="form-control" id="image">
 						<small class="form-text text-muted">Pastikan foto milik anda</small>
 					</div>
 					<div class="form-group">
 						<label for="description">Deskripsi foto</label>
-						<input :value="description" type="text" class="form-control" id="description">
+						<input :value="photo.description" type="text" class="form-control" id="description">
 						<small class="form-text text-muted">Deskripsi dari foto</small>
 					</div>
 					<div class="form-group">
 						<label for="price">Harga</label>
-						<input :value="price" type="number" class="form-control" id="price">
+						<input :value="photo.price" type="number" class="form-control" id="price">
 						<small class="form-text text-muted">Harga dalam wei</small>
 					</div>
 					<div class="form-group">
 						<label for="tags">Tag foto</label>
-						<input :value="tags" type="text" class="form-control" id="tags">
+						<input :value="tagsInput" type="text" class="form-control" id="tags">
 						<small class="form-text text-muted">Tag untuk pencarian foto</small>
 					</div>
 					<button class="btn btn-primary float-right" type="submit"
@@ -35,20 +35,26 @@
 export default {
 	data() {
 		return {
-			image: 'nanono',
-			description: 'contoh: keluarga di pantai',
-			price: 100,
-			tags: 'laptop',
+			tagsInput: 'hitler, heil, anda',
+			photo: {
+				image: 'nanono',
+				description: 'keluarga di pantai',
+				price: 100,
+				tags: [],
+			},
 		};
 	},
 	methods: {
 		submitPhoto() {
-			console.table({
-				image: this.image,
-				description: this.description,
-				price: this.price,
-				tags: this.tags,
-			});
+			const tagsArr = this.tagsInput.split(',');
+			this.tags = [];
+
+			for (let i = 0; i < tagsArr.length; i++) {
+				if (tagsArr[i].trim() !== '') this.tags.push(tagsArr[i].trim());
+			}
+
+			this.$store.dispatch('addPhoto', this.photo);
+			console.log(this.$store.getters.photo);
 		},
 	},
 };
