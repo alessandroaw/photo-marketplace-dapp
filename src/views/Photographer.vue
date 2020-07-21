@@ -32,6 +32,8 @@
 	</main>
 </template>
 <script>
+import { SUBMIT_PHOTO } from '@/store/actions.types';
+
 export default {
 	data() {
 		return {
@@ -50,11 +52,10 @@ export default {
 			this.tags = [];
 
 			for (let i = 0; i < tagsArr.length; i++) {
-				if (tagsArr[i].trim() !== '') this.tags.push(tagsArr[i].trim());
+				if (tagsArr[i].trim() !== '') this.photo.tags.push(tagsArr[i].trim());
 			}
 
-			this.$store.dispatch('addPhoto', this.photo);
-			console.log(this.$store.getters.photo);
+			this.$store.dispatch(SUBMIT_PHOTO, this.photo);
 		},
 	},
 };
