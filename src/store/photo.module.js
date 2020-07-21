@@ -1,3 +1,4 @@
+import axios from '@/common/api.service';
 import { SET_PHOTO } from './mutations.types';
 import { SUBMIT_PHOTO } from './actions.types';
 
@@ -23,7 +24,8 @@ export const mutations = {
 
 export const actions = {
 	[SUBMIT_PHOTO](context, photo) {
-		context.commit('setPhoto', photo);
+		context.commit(SET_PHOTO, photo);
+		axios.post('/photo', photo);
 	},
 };
 
