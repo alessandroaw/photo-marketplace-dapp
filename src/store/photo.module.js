@@ -23,9 +23,14 @@ export const mutations = {
 };
 
 export const actions = {
-	[SUBMIT_PHOTO](context, photo) {
+	async [SUBMIT_PHOTO](context, photo) {
 		context.commit(SET_PHOTO, photo);
-		axios.post('/photo', photo);
+		try {
+			const result = await axios.post('/photo', photo);
+			console.log(result.data);
+		} catch (error) {
+			console.error(error);
+		}
 	},
 };
 

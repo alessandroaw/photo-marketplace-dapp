@@ -5,21 +5,10 @@
             <div class="container">
                 <div class="row">
 					<app-photo
-						:imgSrc="imgSrc"
-						:message="message"
-						:photoTags="photoTags"
-						></app-photo>
-
-					<app-photo
-						:imgSrc="imgSrc"
-						:message="message"
-						:photoTags="photoTags"
-						></app-photo>
-
-					<app-photo
-						:imgSrc="imgSrc"
-						:message="message"
-						:photoTags="photoTags"
+						v-for="photo in photos"
+						:imgSrc="photo.imgSrc"
+						:description="photo.description"
+						:tags="photo.tags"
 						></app-photo>
 				</div>
 			</div>
@@ -33,9 +22,23 @@ import Photo from '@/components/Photo.vue';
 export default {
 	data() {
 		return {
-			imgSrc: 'https://picsum.photos/300/200',
-			message: 'this is my message hahaha',
-			photoTags: ['laptop', 'coffee', 'wood', 'table', 'work', 'glassess'],
+			photos: [
+				{
+					imgSrc: 'https://picsum.photos/300/200',
+					description: 'this is my enak aja hahaha',
+					tags: ['laptop', 'coffee', 'wood', 'table', 'work', 'glassess'],
+				},
+				{
+					imgSrc: 'https://picsum.photos/300/200',
+					description: 'this is my description hahaha',
+					tags: ['laptop', 'coffee', 'wood', 'table', 'work', 'glassess'],
+				},
+				{
+					imgSrc: 'https://picsum.photos/300/200',
+					description: 'this is my description hahaha',
+					tags: ['laptop', 'coffee', 'wood', 'table', 'work', 'glassess'],
+				},
+			],
 		};
 	},
 	components: {

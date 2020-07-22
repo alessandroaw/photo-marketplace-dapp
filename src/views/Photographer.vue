@@ -49,7 +49,7 @@ export default {
 	methods: {
 		submitPhoto() {
 			const tagsArr = this.tagsInput.split(',');
-			this.tags = [];
+			this.photo.tags = [];
 
 			for (let i = 0; i < tagsArr.length; i++) {
 				if (tagsArr[i].trim() !== '') this.photo.tags.push(tagsArr[i].trim());

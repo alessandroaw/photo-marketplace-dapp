@@ -4,10 +4,10 @@
             <img :src="imgSrc" alt="" class="card-img-top img-fluid">
             <div class="card-body">
                 <p class="card-text">
-                    {{message}}
+                    {{description}}
                 </p>
                 <p>
-                    <a v-for="tag in photoTags" :key="tag"
+                    <a v-for="tag in tags" :key="tag"
                     href="#" class="badge badge-info mr-1">{{tag}}</a>
                 </p>
                 <div class="d-flex justify-content-between align-items-center">
@@ -22,8 +22,8 @@
 export default {
 	props: {
 		imgSrc: String,
-		message: String,
-		photoTags: Array,
+		description: String,
+		tags: Array,
 	},
 };
 </script>

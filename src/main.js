@@ -1,4 +1,5 @@
 import './scss/main.scss';
+import "regenerator-runtime/runtime.js";
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import App from '@/App.vue';
