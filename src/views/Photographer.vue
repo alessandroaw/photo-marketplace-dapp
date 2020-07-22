@@ -2,7 +2,12 @@
 	<main class="photographer container py-5">
 		<form>
 			<div class="row justify-content-center">
-				<div class="col-md-6">
+				<div v-if="!isPhotographer" class="col-md-6">
+					<h2>Anda bukan fotografer</h2>
+					<p>Daftar menjadi photographer?</p>
+					<button @click.prevent="enlistPhotographer" class="btn btn-primary">Daftar</button>
+				</div>
+				<div v-else class="col-md-6">
 					<div class="form-group">
 						<label for="image">Foto</label>
 						<input :value="photo.image" type="text" class="form-control" id="image">
@@ -28,13 +33,15 @@
 				</div>
 			</div>
 		</form>
-		<hr>
 	</main>
 </template>
 <script>
 import { SUBMIT_PHOTO } from '@/store/actions.types';
 
 export default {
+	created() {
+		// this.photoManager = '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A';
+	},
 	data() {
 		return {
 			tagsInput: 'hitler, heil, anda',
@@ -43,11 +50,19 @@ export default {
 				description: 'keluarga di pantai',
 				price: 100,
 				tags: [],
-				photoManager: '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A',
+				photoManager: '',
 			},
 		};
 	},
+	computed: {
+		isPhotographer() {
+			return this.photo.photoManager !== '';
+		},
+	},
 	methods: {
+		enlistPhotographer() {
+			this.photo.photoManager = '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A';
+		},
 		submitPhoto() {
 			const tagsArr = this.tagsInput.split(',');
 			const tagSet = new Set();
