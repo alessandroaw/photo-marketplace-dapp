@@ -11,7 +11,7 @@
                     href="#" class="badge badge-info mr-1">{{tag}}</a>
                 </p>
                 <div class="d-flex justify-content-between align-items-center">
-                    <strong class="text-muted">Rp 10.000</strong>
+                    <strong class="text-muted">WEI {{price}}</strong>
                     <button class="btn btn-success">Beli</button>
                 </div>
             </div>
@@ -24,6 +24,7 @@ export default {
 		imgSrc: String,
 		description: String,
 		tags: Array,
+		price: Number,
 	},
 };
 </script>

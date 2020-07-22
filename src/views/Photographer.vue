@@ -43,17 +43,20 @@ export default {
 				description: 'keluarga di pantai',
 				price: 100,
 				tags: [],
+				photoManager: '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A',
 			},
 		};
 	},
 	methods: {
 		submitPhoto() {
 			const tagsArr = this.tagsInput.split(',');
-			this.photo.tags = [];
+			const tagSet = new Set();
 
 			for (let i = 0; i < tagsArr.length; i++) {
-				if (tagsArr[i].trim() !== '') this.photo.tags.push(tagsArr[i].trim());
+				if (tagsArr[i].trim() !== '') tagSet.add(tagsArr[i].trim());
 			}
+
+			this.photo.tags = Array.from(tagSet);
 
 			this.$store.dispatch(SUBMIT_PHOTO, this.photo);
 		},
