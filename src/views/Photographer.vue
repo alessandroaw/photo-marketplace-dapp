@@ -39,6 +39,8 @@
 </template>
 <script>
 import { SUBMIT_PHOTO } from '@/store/actions.types';
+import { mapGetters } from 'vuex';
+import amJson from '../../contracts/AccountManager.json';
 
 export default {
 	created() {
@@ -58,13 +60,22 @@ export default {
 		};
 	},
 	computed: {
+		...mapGetters('drizzle', ['drizzleInstance']),
+		...mapGetters('accounts', ['activeAccount', 'activeBalance']),
 		isPhotographer() {
 			return this.photoManager !== '';
 		},
 	},
 	methods: {
 		enlistPhotographer() {
-			this.photoManager = '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A';
+			console.log(this.drizzleInstance.contracts.AccountManager.methods);
+			const result = this.drizzleInstance
+				.contracts.AccountManager
+				.methods.addPhotographer
+				.send({ from: this.activeAccount });
+
+			console.log(result);
+			// this.photoManager = '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A';
 		},
 		submitPhoto() {
 			const tagsArr = this.tagsInput.split(',');
