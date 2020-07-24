@@ -1,5 +1,5 @@
 <template>
-	<footer v-if="isDrizzleInitialized" footer class="footer bg-dark text-white">
+	<footer class="footer bg-dark text-white">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-8">
@@ -19,12 +19,3 @@
 		</div>
 	</footer>
 </template>
-<script>
-import { mapGetters } from 'vuex';
-
-export default {
-	computed: {
-		...mapGetters('drizzle', ['isDrizzleInitialized']),
-	},
-};
-</script>

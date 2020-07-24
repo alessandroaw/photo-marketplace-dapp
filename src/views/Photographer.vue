@@ -40,11 +40,15 @@
 <script>
 import { SUBMIT_PHOTO } from '@/store/actions.types';
 import { mapGetters } from 'vuex';
-import amJson from '../../contracts/AccountManager.json';
 
 export default {
 	created() {
-		// this.photoManager = '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A';
+		this.photoManager = this.drizzleInstance
+			.contracts.AccountManager
+			.methods.getPhotoManager
+			.cacheCall(this.activeAccount);
+		this.drizzleInstance.contracts.AccountManager.address = 'sass';
+		console.log(this.drizzleInstance.contracts.AccountManager.address);
 	},
 	data() {
 		return {
@@ -62,19 +66,17 @@ export default {
 	computed: {
 		...mapGetters('drizzle', ['drizzleInstance']),
 		...mapGetters('accounts', ['activeAccount', 'activeBalance']),
+		...mapGetters('contracts', ['getContractsData']),
 		isPhotographer() {
 			return this.photoManager !== '';
 		},
 	},
 	methods: {
 		enlistPhotographer() {
-			console.log(this.drizzleInstance.contracts.AccountManager.methods);
-			const result = this.drizzleInstance
+			this.drizzleInstance
 				.contracts.AccountManager
 				.methods.addPhotographer
-				.send({ from: this.activeAccount });
-
-			console.log(result);
+				.cacheSend();
 			// this.photoManager = '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A';
 		},
 		submitPhoto() {
@@ -86,7 +88,6 @@ export default {
 			}
 
 			this.photo.tags = Array.from(tagSet);
-
 			this.$store.dispatch(SUBMIT_PHOTO, this.photo);
 		},
 	},
