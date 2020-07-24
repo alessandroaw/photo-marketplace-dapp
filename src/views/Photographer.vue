@@ -2,10 +2,12 @@
 	<main class="photographer container py-5">
 		<form>
 			<div class="row justify-content-center">
-				<div v-if="!isPhotographer" class="col-md-6">
+				<div v-if="!isPhotographer" class="col-md-6 text-center">
 					<h2>Anda bukan fotografer</h2>
 					<p>Daftar menjadi photographer?</p>
-					<button @click.prevent="enlistPhotographer" class="btn btn-primary">Daftar</button>
+					<button @click.prevent="enlistPhotographer" class="btn btn-primary btn-block">
+						Daftar
+					</button>
 				</div>
 				<div v-else class="col-md-6">
 					<div class="form-group">
@@ -44,6 +46,7 @@ export default {
 	},
 	data() {
 		return {
+			photoManager: '',
 			tagsInput: 'hitler, heil, anda',
 			photo: {
 				image: 'nanono',
@@ -56,12 +59,12 @@ export default {
 	},
 	computed: {
 		isPhotographer() {
-			return this.photo.photoManager !== '';
+			return this.photoManager !== '';
 		},
 	},
 	methods: {
 		enlistPhotographer() {
-			this.photo.photoManager = '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A';
+			this.photoManager = '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A';
 		},
 		submitPhoto() {
 			const tagsArr = this.tagsInput.split(',');
