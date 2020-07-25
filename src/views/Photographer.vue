@@ -72,11 +72,12 @@ export default {
 	methods: {
 		async enlistPhotographer() {
 			try {
-				await this.drizzleInstance
+				const result = await this.drizzleInstance
 					.contracts.AccountManager
 					.methods.addPhotographer()
 					.send({ from: this.activeAccount });
 				this.photoManager = result.events.PhotographerListing.returnValues.PhotoManager;
+				// TODO: LOAD PHOTOMANAGER CONTRACT
 			} catch (error) {
 				console.error('Gagal mengirimkan transaksi', error);
 			}
@@ -93,6 +94,7 @@ export default {
 
 			try {
 				const { data } = await axios.post('/photo', this.photo);
+				// TODO SEND ADDPHOTO TRANSACTION TO PHOTOMANAGER CONTRACT
 			} catch (error) {
 				console.errror('Gagal Submit foto', error);
 			}
