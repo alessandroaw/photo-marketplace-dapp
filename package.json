@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@drizzle/vue-plugin": "^0.1.1",
     "axios": "^0.19.2",
     "regenerator-runtime": "^0.13.5",
     "vue": "^2.6.11",
