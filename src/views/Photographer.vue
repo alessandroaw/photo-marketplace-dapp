@@ -38,18 +38,10 @@
 	</main>
 </template>
 <script>
-import { SUBMIT_PHOTO } from '@/store/actions.types';
 import { mapGetters } from 'vuex';
+import axios from '@/common/api.service';
 
 export default {
-	created() {
-		this.photoManager = this.drizzleInstance
-			.contracts.AccountManager
-			.methods.getPhotoManager
-			.cacheCall(this.activeAccount);
-		this.drizzleInstance.contracts.AccountManager.address = 'sass';
-		console.log(this.drizzleInstance.contracts.AccountManager.address);
-	},
 	data() {
 		return {
 			photoManager: '',
@@ -59,27 +51,37 @@ export default {
 				description: 'keluarga di pantai',
 				price: 100,
 				tags: [],
-				photoManager: '',
+				photoManager: '0x0000000000000000000000000000000000000000',
 			},
 		};
 	},
 	computed: {
 		...mapGetters('drizzle', ['drizzleInstance']),
 		...mapGetters('accounts', ['activeAccount', 'activeBalance']),
-		...mapGetters('contracts', ['getContractsData']),
 		isPhotographer() {
-			return this.photoManager !== '';
+			return this.photoManager && (this.photoManager !== '0x0000000000000000000000000000000000000000');
 		},
 	},
+	async created() {
+		// Initializing PhotoManager if isPhotographer
+		this.photoManager = await this.drizzleInstance
+			.contracts.AccountManager
+			.methods.getPhotoManager(this.activeAccount)
+			.call({ from: this.activeAccount });
+	},
 	methods: {
-		enlistPhotographer() {
-			this.drizzleInstance
-				.contracts.AccountManager
-				.methods.addPhotographer
-				.cacheSend();
-			// this.photoManager = '0x1478498d74E4e6faEB8F84a9085Df5197d7CFC5A';
+		async enlistPhotographer() {
+			try {
+				await this.drizzleInstance
+					.contracts.AccountManager
+					.methods.addPhotographer()
+					.send({ from: this.activeAccount });
+				this.photoManager = result.events.PhotographerListing.returnValues.PhotoManager;
+			} catch (error) {
+				console.error('Gagal mengirimkan transaksi', error);
+			}
 		},
-		submitPhoto() {
+		async submitPhoto() {
 			const tagsArr = this.tagsInput.split(',');
 			const tagSet = new Set();
 
@@ -88,7 +90,12 @@ export default {
 			}
 
 			this.photo.tags = Array.from(tagSet);
-			this.$store.dispatch(SUBMIT_PHOTO, this.photo);
+
+			try {
+				const { data } = await axios.post('/photo', this.photo);
+			} catch (error) {
+				console.errror('Gagal Submit foto', error);
+			}
 		},
 	},
 };
