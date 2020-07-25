@@ -2,13 +2,9 @@
 	<main class="photographer container py-5">
 		<form>
 			<div class="row justify-content-center">
-				<div v-if="!isPhotographer" class="col-md-6 text-center">
-					<h2>Anda bukan fotografer</h2>
-					<p>Daftar menjadi photographer?</p>
-					<button @click.prevent="enlistPhotographer" class="btn btn-primary btn-block">
-						Daftar
-					</button>
-				</div>
+				<enlist-photographer v-if="!isPhotographer"
+					@photographerListed="loadPhotoManager">
+				</enlist-photographer>
 				<div v-else class="col-md-6">
 					<div class="form-group">
 						<label for="image">Foto</label>
@@ -39,9 +35,13 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
+import EnlistPhotographer from '@/components/EnlistPhotographer.vue';
 import axios from '@/common/api.service';
 
 export default {
+	components: {
+		EnlistPhotographer,
+	},
 	data() {
 		return {
 			photoManager: '',
@@ -70,17 +70,9 @@ export default {
 			.call({ from: this.activeAccount });
 	},
 	methods: {
-		async enlistPhotographer() {
-			try {
-				const result = await this.drizzleInstance
-					.contracts.AccountManager
-					.methods.addPhotographer()
-					.send({ from: this.activeAccount });
-				this.photoManager = result.events.PhotographerListing.returnValues.PhotoManager;
-				// TODO: LOAD PHOTOMANAGER CONTRACT
-			} catch (error) {
-				console.error('Gagal mengirimkan transaksi', error);
-			}
+		loadPhotoManager(photoManager) {
+			this.photoManager = photoManager;
+			// TODO LOAD PHOTO MANAGER CONTRACT
 		},
 		async submitPhoto() {
 			const tagsArr = this.tagsInput.split(',');
@@ -94,7 +86,7 @@ export default {
 
 			try {
 				const { data } = await axios.post('/photo', this.photo);
-				// TODO SEND ADDPHOTO TRANSACTION TO PHOTOMANAGER CONTRACT
+				// TODO SEND ADDPHOTO TRANSACTION THROUGH PHOTOMANAGER CONTRACT
 			} catch (error) {
 				console.errror('Gagal Submit foto', error);
 			}
