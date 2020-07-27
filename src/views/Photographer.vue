@@ -6,6 +6,12 @@
 					@photographerListed="loadPhotoManager">
 				</enlist-photographer>
 				<div v-else class="col-md-6">
+					<p>
+						Photo Manager: {{photoManagerAddress}}
+					</p>
+					<p>
+						Saldo: {{photoManagerBalance}} Wei
+					</p>
 					<div class="form-group">
 						<label for="image">Foto</label>
 						<input :value="photo.image" type="text" class="form-control" id="image">
@@ -37,21 +43,23 @@
 import { mapGetters } from 'vuex';
 import EnlistPhotographer from '@/components/EnlistPhotographer.vue';
 import axios from '@/common/api.service';
+import contractMixin from '@/common/contract.mixin';
 
 export default {
 	components: {
 		EnlistPhotographer,
 	},
+	mixins: [contractMixin],
 	data() {
 		return {
-			photoManager: '',
+			photoManagerAddress: '0x0000000000000000000000000000000000000000',
+			photoManagerBalance: 100,
 			tagsInput: 'hitler, heil, anda',
 			photo: {
 				image: 'nanono',
 				description: 'keluarga di pantai',
 				price: 100,
 				tags: [],
-				photoManager: '0x0000000000000000000000000000000000000000',
 			},
 		};
 	},
@@ -59,19 +67,25 @@ export default {
 		...mapGetters('drizzle', ['drizzleInstance']),
 		...mapGetters('accounts', ['activeAccount', 'activeBalance']),
 		isPhotographer() {
-			return this.photoManager && (this.photoManager !== '0x0000000000000000000000000000000000000000');
+			return this.photoManagerAddress && (this.photoManagerAddress !== '0x0000000000000000000000000000000000000000');
 		},
 	},
 	async created() {
 		// Initializing PhotoManager if isPhotographer
-		this.photoManager = await this.drizzleInstance
+		console.log(this.drizzleInstance);
+		this.photoManagerAddress = await this.drizzleInstance
 			.contracts.AccountManager
 			.methods.getPhotoManager(this.activeAccount)
 			.call({ from: this.activeAccount });
+
+		if (this.isPhotographer) {
+			await this.createPhotoManagerContract(this.photoManagerAddress);
+			console.log(this.drizzleInstance);
+		}
 	},
 	methods: {
-		loadPhotoManager(photoManager) {
-			this.photoManager = photoManager;
+		loadPhotoManager(photoManagerAddress) {
+			this.photoManagerAddress = photoManagerAddress;
 			// TODO LOAD PHOTO MANAGER CONTRACT
 		},
 		async submitPhoto() {
