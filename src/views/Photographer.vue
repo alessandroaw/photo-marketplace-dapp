@@ -2,7 +2,16 @@
 	<main class="photographer container py-5">
 		<form>
 			<div class="row justify-content-center">
-				<div class="col-md-6">
+				<enlist-photographer v-if="!isPhotographer"
+					@photographerListed="loadPhotoManager">
+				</enlist-photographer>
+				<div v-else class="col-md-6">
+					<p>
+						Photo Manager: {{photoManagerAddress}}
+					</p>
+					<p>
+						Saldo: {{photoManagerBalance}} Wei
+					</p>
 					<div class="form-group">
 						<label for="image">Foto</label>
 						<input :value="photo.image" type="text" class="form-control" id="image">
@@ -28,15 +37,23 @@
 				</div>
 			</div>
 		</form>
-		<hr>
 	</main>
 </template>
 <script>
-import { SUBMIT_PHOTO } from '@/store/actions.types';
+import { mapGetters } from 'vuex';
+import EnlistPhotographer from '@/components/EnlistPhotographer.vue';
+import axios from '@/common/api.service';
+import contractMixin from '@/common/contract.mixin';
 
 export default {
+	components: {
+		EnlistPhotographer,
+	},
+	mixins: [contractMixin],
 	data() {
 		return {
+			photoManagerAddress: '0x0000000000000000000000000000000000000000',
+			photoManagerBalance: 100,
 			tagsInput: 'hitler, heil, anda',
 			photo: {
 				image: 'nanono',
@@ -46,16 +63,47 @@ export default {
 			},
 		};
 	},
+	computed: {
+		...mapGetters('drizzle', ['drizzleInstance']),
+		...mapGetters('accounts', ['activeAccount', 'activeBalance']),
+		isPhotographer() {
+			return this.photoManagerAddress && (this.photoManagerAddress !== '0x0000000000000000000000000000000000000000');
+		},
+	},
+	async created() {
+		// Initializing PhotoManager if isPhotographer
+		console.log(this.drizzleInstance);
+		this.photoManagerAddress = await this.drizzleInstance
+			.contracts.AccountManager
+			.methods.getPhotoManager(this.activeAccount)
+			.call({ from: this.activeAccount });
+
+		if (this.isPhotographer) {
+			await this.createPhotoManagerContract(this.photoManagerAddress);
+			console.log(this.drizzleInstance);
+		}
+	},
 	methods: {
-		submitPhoto() {
+		loadPhotoManager(photoManagerAddress) {
+			this.photoManagerAddress = photoManagerAddress;
+			// TODO LOAD PHOTO MANAGER CONTRACT
+		},
+		async submitPhoto() {
 			const tagsArr = this.tagsInput.split(',');
-			this.tags = [];
+			const tagSet = new Set();
 
 			for (let i = 0; i < tagsArr.length; i++) {
-				if (tagsArr[i].trim() !== '') this.photo.tags.push(tagsArr[i].trim());
+				if (tagsArr[i].trim() !== '') tagSet.add(tagsArr[i].trim());
 			}
 
-			this.$store.dispatch(SUBMIT_PHOTO, this.photo);
+			this.photo.tags = Array.from(tagSet);
+
+			try {
+				const { data } = await axios.post('/photo', this.photo);
+				// TODO SEND ADDPHOTO TRANSACTION THROUGH PHOTOMANAGER CONTRACT
+			} catch (error) {
+				console.errror('Gagal Submit foto', error);
+			}
 		},
 	},
 };

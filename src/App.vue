@@ -1,7 +1,10 @@
 <template>
   <div>
 		<app-header></app-header>
-		<router-view></router-view>
+		<router-view v-if="isDrizzleInitialized"></router-view>
+		<div v-else class="container">
+			<h1>Loading...</h1>
+		</div>
 		<app-footer></app-footer>
   </div>
 </template>
@@ -9,6 +12,7 @@
 <script>
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import { mapGetters } from 'vuex';
 
 export default {
 	data() {
@@ -16,17 +20,12 @@ export default {
 			message: 'Hello World',
 		};
 	},
+	computed: {
+		...mapGetters('drizzle', ['isDrizzleInitialized']),
+	},
 	components: {
 		appHeader: Header,
 		appFooter: Footer,
 	},
 };
 </script>
-
-<style>
-#app {
-  font-size: 18px;
-  font-family: 'Roboto', sans-serif;
-  color: blue;
-}
-</style>
