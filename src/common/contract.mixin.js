@@ -12,6 +12,8 @@ const mixin = {
 	},
 	methods: {
 		createPhotoManagerContract(address) {
+			if (this.isPhotoManagerInitialized) return;
+
 			const config = {
 				contractName: pmJson.contractName,
 				web3Contract: new this.drizzleInstance.web3.eth.Contract(pmJson.abi, address),
@@ -21,6 +23,11 @@ const mixin = {
 
 			this.drizzleInstance.addContract(config, event);
 			this.isPhotoManagerInitialized = true;
+		},
+		changeContractAddress(contractName, address) {
+			if (!this.drizzleInstance.contracts[contractName]) return;
+
+			this.drizzleInstance.contracts[contractName].address = address;
 		},
 	},
 };
