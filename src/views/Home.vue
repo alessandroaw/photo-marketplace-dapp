@@ -1,14 +1,15 @@
 <template>
 	<main role="main">
-        <app-search-bar></app-search-bar>
+        <app-search-bar @searchTag="filterPhoto"></app-search-bar>
         <section class="album py-5">
             <div class="container">
                 <div class="row">
 					<app-photo
-						v-for="(photo, index) in photos"
+						v-for="(photo, index) in filteredPhotos"
 						:key="photo._id"
 						:index="index"
 						:photo="photo"
+						@tagClicked="filterPhoto"
 						@photoClicked="buyPhoto"
 						></app-photo>
 				</div>
@@ -29,12 +30,17 @@ export default {
 	data() {
 		return {
 			photos: [],
+			filteredPhotos: [],
 		};
 	},
 	methods: {
-		buyPhoto(value) {
+		buyPhoto(index) {
 			// SC Params : ImageHash
-			console.log(this.photos[value]);
+			console.log(this.filteredPhotos[index]);
+		},
+		filterPhoto(tag) {
+			// if (tag === '')
+			this.filteredPhotos = this.photos.filter((photo) => photo.tags.includes(tag));
 		},
 	},
 	created() {
@@ -44,6 +50,7 @@ export default {
 				...photo,
 				imgSrc: baseURL + encodeURI(photo.imagePath),
 			}));
+			this.filteredPhotos = [...this.photos];
 			console.log(this.photos);
 		}).catch((error) => {
 			console.error(error);

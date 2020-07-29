@@ -40,7 +40,7 @@ export default {
 	},
 	data() {
 		return {
-			tagsInput: 'hitler, heil, anda',
+			tagsInput: '',
 			selectedFile: null,
 			imageFile: null,
 			photo: {
@@ -51,6 +51,15 @@ export default {
 				photoManager: '',
 			},
 		};
+	},
+	created() {
+		const tagsTest = ['alam', 'arsitektur', 'teknologi', 'industri', 'kesehatan'];
+
+		const random = (x) => Math.floor(Math.random() * x);
+
+		this.tagsInput += `${tagsTest.splice(random(tagsTest.length), 1)}`;
+		this.tagsInput += `, ${tagsTest.splice(random(tagsTest.length), 1)}`;
+		this.tagsInput += `, ${tagsTest.splice(random(tagsTest.length), 1)}`;
 	},
 	computed: {
 		...mapGetters('drizzle', ['drizzleInstance']),
@@ -67,7 +76,7 @@ export default {
 			const tagSet = new Set();
 
 			for (let i = 0; i < tagsArr.length; i++) {
-				if (tagsArr[i].trim() !== '') tagSet.add(tagsArr[i].trim());
+				if (tagsArr[i].trim() !== '') tagSet.add(tagsArr[i].toLowerCase().trim());
 			}
 
 			this.photo.tags = Array.from(tagSet);
