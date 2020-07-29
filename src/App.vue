@@ -2,7 +2,7 @@
   <div>
 		<app-header></app-header>
 		<router-view v-if="isDrizzleInitialized"></router-view>
-		<div v-else class="container">
+		<div v-else class="loader">
 			<h1>Loading...</h1>
 		</div>
 		<app-footer></app-footer>
@@ -15,11 +15,6 @@ import Footer from '@/components/Footer.vue';
 import { mapGetters } from 'vuex';
 
 export default {
-	data() {
-		return {
-			message: 'Hello World',
-		};
-	},
 	computed: {
 		...mapGetters('drizzle', ['isDrizzleInitialized']),
 	},

@@ -6,34 +6,13 @@
 					@photographerListed="loadPhotoManager">
 				</enlist-photographer>
 				<div v-else class="col-md-6">
-					<p>
-						Photo Manager: {{photoManagerAddress}}
-					</p>
-					<p>
-						Saldo: {{photoManagerBalance}} Wei
-					</p>
-					<div class="form-group">
-						<label for="image">Foto</label>
-						<input :value="photo.image" type="text" class="form-control" id="image">
-						<small class="form-text text-muted">Pastikan foto milik anda</small>
-					</div>
-					<div class="form-group">
-						<label for="description">Deskripsi foto</label>
-						<input :value="photo.description" type="text" class="form-control" id="description">
-						<small class="form-text text-muted">Deskripsi dari foto</small>
-					</div>
-					<div class="form-group">
-						<label for="price">Harga</label>
-						<input :value="photo.price" type="number" class="form-control" id="price">
-						<small class="form-text text-muted">Harga dalam wei</small>
-					</div>
-					<div class="form-group">
-						<label for="tags">Tag foto</label>
-						<input :value="tagsInput" type="text" class="form-control" id="tags">
-						<small class="form-text text-muted">Tag untuk pencarian foto</small>
-					</div>
-					<button class="btn btn-primary float-right" type="submit"
-						@click.prevent="submitPhoto">Submit</button>
+					<photo-manager-status
+						:address="photoManagerAddress"
+						:balance="photoManagerBalance">
+					</photo-manager-status>
+					<photo-submit-form
+						:address="photoManagerAddress">
+					</photo-submit-form>
 				</div>
 			</div>
 		</form>
@@ -41,38 +20,35 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import EnlistPhotographer from '@/components/EnlistPhotographer.vue';
-import axios from '@/common/api.service';
 import contractMixin from '@/common/contract.mixin';
+import EnlistPhotographer from '@/components/EnlistPhotographer.vue';
+import PhotoManagerStatus from '@/components/PhotoManagerStatus.vue';
+import PhotoSubmitForm from '@/components/PhotoSubmitForm.vue';
+
+const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export default {
 	components: {
 		EnlistPhotographer,
+		PhotoManagerStatus,
+		PhotoSubmitForm,
 	},
 	mixins: [contractMixin],
 	data() {
 		return {
-			photoManagerAddress: '0x0000000000000000000000000000000000000000',
+			photoManagerAddress: NULL_ADDRESS,
 			photoManagerBalance: 100,
-			tagsInput: 'hitler, heil, anda',
-			photo: {
-				image: 'nanono',
-				description: 'keluarga di pantai',
-				price: 100,
-				tags: [],
-			},
 		};
 	},
 	computed: {
 		...mapGetters('drizzle', ['drizzleInstance']),
-		...mapGetters('accounts', ['activeAccount', 'activeBalance']),
+		...mapGetters('accounts', ['activeAccount']),
 		isPhotographer() {
-			return this.photoManagerAddress && (this.photoManagerAddress !== '0x0000000000000000000000000000000000000000');
+			return this.photoManagerAddress && (this.photoManagerAddress !== NULL_ADDRESS);
 		},
 	},
 	async created() {
 		// Initializing PhotoManager if isPhotographer
-		console.log(this.drizzleInstance);
 		this.photoManagerAddress = await this.drizzleInstance
 			.contracts.AccountManager
 			.methods.getPhotoManager(this.activeAccount)
@@ -84,26 +60,10 @@ export default {
 		}
 	},
 	methods: {
-		loadPhotoManager(photoManagerAddress) {
+		async loadPhotoManager(photoManagerAddress) {
 			this.photoManagerAddress = photoManagerAddress;
 			// TODO LOAD PHOTO MANAGER CONTRACT
-		},
-		async submitPhoto() {
-			const tagsArr = this.tagsInput.split(',');
-			const tagSet = new Set();
-
-			for (let i = 0; i < tagsArr.length; i++) {
-				if (tagsArr[i].trim() !== '') tagSet.add(tagsArr[i].trim());
-			}
-
-			this.photo.tags = Array.from(tagSet);
-
-			try {
-				const { data } = await axios.post('/photo', this.photo);
-				// TODO SEND ADDPHOTO TRANSACTION THROUGH PHOTOMANAGER CONTRACT
-			} catch (error) {
-				console.errror('Gagal Submit foto', error);
-			}
+			await this.createPhotoManagerContract(this.photoManagerAddress);
 		},
 	},
 };
