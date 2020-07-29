@@ -39,10 +39,12 @@ export default {
 	},
 	created() {
 		axios.get('/photo').then((result) => {
+			const baseURL = 'https://photo-markeplace-service.herokuapp.com/';
 			this.photos = result.data.map((photo) => ({
 				...photo,
-				imgSrc: 'https://picsum.photos/300/200',
+				imgSrc: baseURL + encodeURI(photo.imagePath),
 			}));
+			console.log(this.photos);
 		}).catch((error) => {
 			console.error(error);
 		});

@@ -2,13 +2,11 @@ import { mapGetters } from 'vuex';
 import pmJson from '../../contracts/PhotoManager.json';
 
 const mixin = {
-	data() {
-		return {
-			isPhotoManagerInitialized: false,
-		};
-	},
 	computed: {
 		...mapGetters('drizzle', ['drizzleInstance']),
+		isPhotoManagerInitialized() {
+			return (typeof this.drizzleInstance.contracts.PhotoManager !== 'undefined');
+		},
 	},
 	methods: {
 		createPhotoManagerContract(address) {
@@ -22,8 +20,8 @@ const mixin = {
 			const event = [];
 
 			this.drizzleInstance.addContract(config, event);
-			this.isPhotoManagerInitialized = true;
 		},
+
 		changeContractAddress(contractName, address) {
 			if (!this.drizzleInstance.contracts[contractName]) return;
 

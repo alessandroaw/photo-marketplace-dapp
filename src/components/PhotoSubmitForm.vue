@@ -1,17 +1,14 @@
 <template>
 	<div>
 		<div class="form-group">
+			<label for="inputImage">Foto</label>
 			<div class="input-group">
 				<div class="custom-file">
 					<input type="file" class="custom-file-input" id="inputImage"
 						@change="onImageChange">
-					<label class="custom-file-label" for="inputImage">{{imageMessage}}</label>
+					<label class="custom-file-label" for="inputImage">{{photo.image}}</label>
 				</div>
 			</div>
-		</div>
-		<div class="form-group">
-			<label for="image">Foto</label>
-			<input :value="photo.image" type="text" class="form-control" id="image">
 			<small class="form-text text-muted">Pastikan foto milik anda</small>
 		</div>
 		<div class="form-group">
@@ -45,9 +42,9 @@ export default {
 		return {
 			tagsInput: 'hitler, heil, anda',
 			selectedFile: null,
-			imageMessage: 'Choose File',
+			imageFile: null,
 			photo: {
-				image: 'nanono',
+				image: 'Pilih berkas foto',
 				description: 'keluarga di pantai',
 				price: 100,
 				tags: [],
@@ -61,13 +58,9 @@ export default {
 	},
 	methods: {
 		onImageChange(event) {
-			[this.selectedFile] = event.target.files;
-			console.log(this.selectedFile);
-			this.imageMessage = this.selectedFile.name;
-		},
-		onUpload() {
-			const fd = new FormData();
-			fd.append('image', this.selectedFile, this.selectedFile.name);
+			[this.imageFile] = event.target.files;
+			console.log(this.imageFile);
+			this.photo.image = this.imageFile.name;
 		},
 		async onPhotoSubmit() {
 			const tagsArr = this.tagsInput.split(',');
@@ -80,8 +73,15 @@ export default {
 			this.photo.tags = Array.from(tagSet);
 			this.photo.photoManager = this.address;
 
+			const fd = new FormData();
+			fd.append('imageFile', this.imageFile, this.imageFile.name);
+
+			Object.keys(this.photo).forEach((key) => {
+				fd.append(key, this.photo[key]);
+			});
+
 			try {
-				const { data } = await axios.post('/photo', this.photo);
+				const { data } = await axios.post('/photo', fd);
 				console.log(data);
 				// TODO SEND ADDPHOTO TRANSACTION THROUGH PHOTOMANAGER CONTRACT
 				const result = await this.drizzleInstance

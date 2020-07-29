@@ -49,7 +49,6 @@ export default {
 	},
 	async created() {
 		// Initializing PhotoManager if isPhotographer
-		console.log(this.drizzleInstance);
 		this.photoManagerAddress = await this.drizzleInstance
 			.contracts.AccountManager
 			.methods.getPhotoManager(this.activeAccount)

@@ -15,11 +15,6 @@ import Footer from '@/components/Footer.vue';
 import { mapGetters } from 'vuex';
 
 export default {
-	data() {
-		return {
-			message: 'Hello World',
-		};
-	},
 	computed: {
 		...mapGetters('drizzle', ['isDrizzleInitialized']),
 	},
