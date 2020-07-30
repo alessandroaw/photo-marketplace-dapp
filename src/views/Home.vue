@@ -18,25 +18,59 @@
     </main>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import axios from '@/common/api.service';
 import SearchBar from '@/components/SearchBar.vue';
 import Photo from '@/components/Photo.vue';
+import contractMixin from '@/common/contract.mixin';
 
 export default {
 	components: {
 		appPhoto: Photo,
 		appSearchBar: SearchBar,
 	},
+	mixins: [contractMixin],
 	data() {
 		return {
 			photos: [],
 			filteredPhotos: [],
 		};
 	},
+	computed: {
+		...mapGetters('drizzle', ['drizzleInstance']),
+		...mapGetters('accounts', ['activeAccount']),
+	},
 	methods: {
-		buyPhoto(index) {
+		async buyPhoto(index) {
 			// SC Params : ImageHash
-			console.log(this.filteredPhotos[index]);
+			const choosen = this.filteredPhotos[index];
+			console.log(choosen);
+			this.createPhotoManagerContract(choosen.photoManager);
+			console.log('this time');
+			try {
+				const result = await this.drizzleInstance
+					.contracts.PhotoManager
+					.methods.orderLicense(choosen.imageHash)
+					.send({ from: this.activeAccount });
+				console.log(result.events.LicensingProcess.returnValues);
+
+				const {
+					clientAddress, paymentAddress, paid, licenseIndex,
+				} = result.events.LicensingProcess.returnValues;
+
+				const payload = {
+					clientAddress,
+					paymentAddress,
+					licenseIndex,
+					paid,
+					imageId: choosen._id,
+				};
+
+				const temp = await axios.post('/order', payload);
+				console.table(temp);
+			} catch (error) {
+				console.error('Gagal membeli foto');
+			}
 		},
 		filterPhoto(tag) {
 			// if (tag === '')
@@ -45,7 +79,8 @@ export default {
 	},
 	created() {
 		axios.get('/photo').then((result) => {
-			const baseURL = 'https://photo-markeplace-service.herokuapp.com/';
+			// const baseURL = 'https://photo-markeplace-service.herokuapp.com/';
+			const baseURL = 'http://localhost:3000/';
 			this.photos = result.data.map((photo) => ({
 				...photo,
 				imgSrc: baseURL + encodeURI(photo.imagePath),

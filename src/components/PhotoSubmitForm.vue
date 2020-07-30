@@ -69,7 +69,7 @@ export default {
 		onImageChange(event) {
 			[this.imageFile] = event.target.files;
 			console.log(this.imageFile);
-			this.photo.image = this.imageFile.name;
+			this.photo.image = `${new Date().toISOString()}-${this.imageFile.name}`;
 		},
 		async onPhotoSubmit() {
 			const tagsArr = this.tagsInput.split(',');

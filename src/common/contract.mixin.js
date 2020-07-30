@@ -4,19 +4,22 @@ import pmJson from '../../contracts/PhotoManager.json';
 const mixin = {
 	computed: {
 		...mapGetters('drizzle', ['drizzleInstance']),
+	},
+	methods: {
 		isPhotoManagerInitialized() {
 			return (typeof this.drizzleInstance.contracts.PhotoManager !== 'undefined');
 		},
-	},
-	methods: {
 		createPhotoManagerContract(address) {
-			if (this.isPhotoManagerInitialized) return;
-
+			if (this.isPhotoManagerInitialized()) {
+				if (this.drizzleInstance.contracts.PhotoManager.address !== address) {
+					this.drizzleInstance.contracts.PhotoManager.address = address;
+				}
+				return;
+			}
 			const config = {
 				contractName: pmJson.contractName,
 				web3Contract: new this.drizzleInstance.web3.eth.Contract(pmJson.abi, address),
 			};
-
 			const event = [];
 
 			this.drizzleInstance.addContract(config, event);
