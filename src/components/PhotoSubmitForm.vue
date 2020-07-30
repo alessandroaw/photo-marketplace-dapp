@@ -68,7 +68,6 @@ export default {
 	methods: {
 		onImageChange(event) {
 			[this.imageFile] = event.target.files;
-			console.log(this.imageFile);
 			this.photo.image = `${new Date().toISOString()}-${this.imageFile.name}`;
 		},
 		async onPhotoSubmit() {
@@ -91,13 +90,11 @@ export default {
 
 			try {
 				const { data } = await axios.post('/photo', fd);
-				console.log(data);
 				// TODO SEND ADDPHOTO TRANSACTION THROUGH PHOTOMANAGER CONTRACT
 				const result = await this.drizzleInstance
 					.contracts.PhotoManager
 					.methods.createPhoto(data.image, data.price)
 					.send({ from: this.activeAccount });
-				console.log(result);
 			} catch (error) {
 				console.errror('Gagal Submit foto', error);
 			}

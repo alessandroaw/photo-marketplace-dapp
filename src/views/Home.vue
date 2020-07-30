@@ -44,15 +44,12 @@ export default {
 		async buyPhoto(index) {
 			// SC Params : ImageHash
 			const choosen = this.filteredPhotos[index];
-			console.log(choosen);
 			this.createPhotoManagerContract(choosen.photoManager);
-			console.log('this time');
 			try {
 				const result = await this.drizzleInstance
 					.contracts.PhotoManager
 					.methods.orderLicense(choosen.imageHash)
 					.send({ from: this.activeAccount });
-				console.log(result.events.LicensingProcess.returnValues);
 
 				const {
 					clientAddress, paymentAddress, paid, licenseIndex,
@@ -67,7 +64,6 @@ export default {
 				};
 
 				const temp = await axios.post('/order', payload);
-				console.table(temp);
 			} catch (error) {
 				console.error('Gagal membeli foto');
 			}
@@ -86,7 +82,6 @@ export default {
 				imgSrc: baseURL + encodeURI(photo.imagePath),
 			}));
 			this.filteredPhotos = [...this.photos];
-			console.log(this.photos);
 		}).catch((error) => {
 			console.error(error);
 		});

@@ -56,7 +56,6 @@ export default {
 
 		if (this.isPhotographer) {
 			await this.createPhotoManagerContract(this.photoManagerAddress);
-			console.log(this.drizzleInstance);
 		}
 	},
 	methods: {
