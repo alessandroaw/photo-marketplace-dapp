@@ -40,7 +40,7 @@ export default {
 	},
 	data() {
 		return {
-			tagsInput: 'hitler, heil, anda',
+			tagsInput: '',
 			selectedFile: null,
 			imageFile: null,
 			photo: {
@@ -52,6 +52,15 @@ export default {
 			},
 		};
 	},
+	created() {
+		const tagsTest = ['alam', 'arsitektur', 'teknologi', 'industri', 'kesehatan'];
+
+		const random = (x) => Math.floor(Math.random() * x);
+
+		this.tagsInput += `${tagsTest.splice(random(tagsTest.length), 1)}`;
+		this.tagsInput += `, ${tagsTest.splice(random(tagsTest.length), 1)}`;
+		this.tagsInput += `, ${tagsTest.splice(random(tagsTest.length), 1)}`;
+	},
 	computed: {
 		...mapGetters('drizzle', ['drizzleInstance']),
 		...mapGetters('accounts', ['activeAccount']),
@@ -59,15 +68,14 @@ export default {
 	methods: {
 		onImageChange(event) {
 			[this.imageFile] = event.target.files;
-			console.log(this.imageFile);
-			this.photo.image = this.imageFile.name;
+			this.photo.image = `${new Date().toISOString()}-${this.imageFile.name}`;
 		},
 		async onPhotoSubmit() {
 			const tagsArr = this.tagsInput.split(',');
 			const tagSet = new Set();
 
 			for (let i = 0; i < tagsArr.length; i++) {
-				if (tagsArr[i].trim() !== '') tagSet.add(tagsArr[i].trim());
+				if (tagsArr[i].trim() !== '') tagSet.add(tagsArr[i].toLowerCase().trim());
 			}
 
 			this.photo.tags = Array.from(tagSet);
@@ -82,13 +90,11 @@ export default {
 
 			try {
 				const { data } = await axios.post('/photo', fd);
-				console.log(data);
 				// TODO SEND ADDPHOTO TRANSACTION THROUGH PHOTOMANAGER CONTRACT
 				const result = await this.drizzleInstance
 					.contracts.PhotoManager
 					.methods.createPhoto(data.image, data.price)
 					.send({ from: this.activeAccount });
-				console.log(result);
 			} catch (error) {
 				console.errror('Gagal Submit foto', error);
 			}

@@ -27,6 +27,15 @@
               >Fotografer
               </router-link>
             </li>
+            <li class="nav-item">
+              <router-link
+                class="nav-link"
+                active-class="active"
+                exact
+                :to="{ name: 'client' }"
+              >Klien
+              </router-link>
+            </li>
           </ul>
         </div>
       </div>
