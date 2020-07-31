@@ -1,70 +1,44 @@
 <template>
 	<div>
+		<section class="jumbotron mb-0">
+			<div class="container text-center">
+				<h1 class="logo-font">Keranjang Foto</h1>
+			</div>
+		</section>
 		<main role="main">
 			<section class="cart py-5">
 				<div class="container">
 					<div class="row justify-content-center">
 						<div class="col-lg-10">
-							<div class="table-responsive mt-2">
-								<table class="table table-bordered table-striped text-center">
-									<thead>
-										<tr>
-											<td colspan="6">
-												<h2 class="text-center text-info m-0">Foto pada keranjang</h2>
-											</td>
-										</tr>
-										<th>ID</th>
-										<th>Images</th>
-										<th>Price</th>
-										<th>Payment address</th>
-										<th>Status</th>
-										<!-- <th>
-											<a href="#" class="badge-danger badge p-1">
-												<i class="fas fa-trash">Delete</i>
-											</a>
-										</th> -->
-									</thead>
-									<tbody>
-										<tr>
-											<td>1</td>
-											<td>Coffe in a wooden table</td>
-											<td>Rp 10.000</td>
-											<td>
-												<a class="text-muted" href="#">
-													0xeB972d62151d6c565E6b84A6603a01521f5D162D
-												</a>
-											</td>
-											<td class="text-success">Paid</td>
-										</tr>
-										<tr>
-											<td>2</td>
-											<td>Coffe in a wooden table</td>
-											<td>Rp 10.000</td>
-											<td>
-												<a href="#">
-													0xeB972d62151d6c565E6b84A6603a01521f5D162D
-												</a>
-											</td>
-											<td class="text-danger">Ordered</td>
-										</tr>
-										<tr>
-											<td>3</td>
-											<td>Coffe in a wooden table</td>
-											<td>Rp 10.000</td>
-											<td>
-												<a href="#">
-													0xeB972d62151d6c565E6b84A6603a01521f5D162D
-												</a>
-											</td>
-											<td class="text-danger">Ordered</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
+							<cart-table
+								:orders="orders"
+								:showPaid="showPaid"></cart-table>
 						</div>
 					</div>
 				</div>
 			</section>
-		</main>	
+		</main>
 	</div>
 </template>
+<script>
+import CartTable from '@/components/CartTable.vue';
+
+const tempOrder = {
+	paid: false,
+	clientAddress: '0x81e228905ce51B472B049177BB78Fa630078C4A5',
+	paymentAddress: '0xCB55CA50d62FBEE8ecFD2a849d821E7500a35f88',
+	imageId: '5f225edc52b8622bbf8cb162',
+};
+
+export default {
+	components: {
+		CartTable,
+	},
+	data() {
+		return {
+			showPaid: false,
+			orders: [tempOrder, tempOrder, tempOrder],
+		};
+	},
+};
+</script>

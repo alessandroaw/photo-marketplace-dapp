@@ -10,7 +10,7 @@
 						:index="index"
 						:photo="photo"
 						@tagClicked="filterPhoto"
-						@photoClicked="buyPhoto"
+						@photoClicked="orderPhoto"
 						></app-photo>
 				</div>
 			</div>
@@ -41,7 +41,7 @@ export default {
 		...mapGetters('accounts', ['activeAccount']),
 	},
 	methods: {
-		async buyPhoto(index) {
+		async orderPhoto(index) {
 			// SC Params : ImageHash
 			const choosen = this.filteredPhotos[index];
 			this.createPhotoManagerContract(choosen.photoManager);
