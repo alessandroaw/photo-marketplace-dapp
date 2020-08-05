@@ -1,7 +1,7 @@
 <template>
 <section class="jumbotron mb-0">
 	<div class="container text-center">
-		<h1>Cari Foto Stok</h1>
+		<h1 class="logo-font">Cari Foto Stok</h1>
 		<!-- <p class="lead text-muted">Cari foto yang anda inginkan</p> -->
 		<form @submit.prevent="searchTag(searchValue)" class="form-group d-flex justify-content-center">
 			<input class="form-control text-center" :value="searchValue" style="width: 50%"

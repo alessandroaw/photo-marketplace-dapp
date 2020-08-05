@@ -8,11 +8,11 @@
 				</p>
 				<p>
 					<a v-for="tag in photo.tags" :key="tag"
-					href="#" @click="tagClicked(tag)" class="badge badge-info mr-1">{{tag}}</a>
+					href="#" @click="onTagClick(tag)" class="badge badge-info mr-1">{{tag}}</a>
 				</p>
 				<div class="d-flex justify-content-between align-items-center">
 					<strong class="text-muted">WEI {{photo.price}}</strong>
-					<button @click="photoClicked" class="btn btn-success">Beli</button>
+					<button @click="onPhotoClick" class="btn btn-success">Beli</button>
 				</div>
 			</div>
 		</div>
@@ -31,10 +31,10 @@ export default {
 		},
 	},
 	methods: {
-		tagClicked(tag) {
+		onTagClick(tag) {
 			this.$emit('tagClicked', tag);
 		},
-		photoClicked() {
+		onPhotoClick() {
 			this.$emit('photoClicked', this.index);
 		},
 	},

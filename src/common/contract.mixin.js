@@ -20,7 +20,7 @@ const mixin = {
 				contractName: pmJson.contractName,
 				web3Contract: new this.drizzleInstance.web3.eth.Contract(pmJson.abi, address),
 			};
-			const event = [];
+			const event = ['LicensingProcess'];
 
 			this.drizzleInstance.addContract(config, event);
 		},
