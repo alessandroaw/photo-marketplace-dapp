@@ -8,7 +8,7 @@
 					</router-link>
 					<span class="attribution">
 						Proyek tugas akhir
-						<a class="text-white" href="https://thinkster.io"
+						<a class="text-white" href="https://github.com/theRealSandro"
 						><i>TheRealSandro</i></a>
 					</span>
 				</div>

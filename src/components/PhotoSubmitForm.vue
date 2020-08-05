@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="form-group">
-			<label for="inputImage">Foto</label>
+			<label class="label text-secondary" for="inputImage">Foto</label>
 			<div class="input-group">
 				<div class="custom-file">
 					<input type="file" class="custom-file-input" id="inputImage"
@@ -12,22 +12,32 @@
 			<small class="form-text text-muted">Pastikan foto milik anda</small>
 		</div>
 		<div class="form-group">
-			<label for="description">Deskripsi foto</label>
+			<label class="label text-secondary" for="description">Deskripsi foto</label>
 			<input :value="photo.description" type="text" class="form-control" id="description">
 			<small class="form-text text-muted">Deskripsi dari foto</small>
 		</div>
 		<div class="form-group">
-			<label for="price">Harga</label>
+			<label class="label text-secondary" for="price">Harga</label>
 			<input :value="photo.price" type="number" class="form-control" id="price">
 			<small class="form-text text-muted">Harga dalam wei</small>
 		</div>
 		<div class="form-group">
-			<label for="tags">Tag foto</label>
+			<label class="label text-secondary" for="tags">Tag foto</label>
 			<input :value="tagsInput" type="text" class="form-control" id="tags">
 			<small class="form-text text-muted">Tag untuk pencarian foto</small>
 		</div>
-		<button class="btn btn-primary float-right" type="submit"
-			@click.prevent="onPhotoSubmit">Submit</button>
+		<div class="d-flex justify-content-between">
+			<div v-if="isProcessing" class="d-flex align-items-center">
+				<div class="spinner-border text-primary mr-3">
+					<span class="sr-only">Loading...</span>
+				</div>
+				<span>Pendaftaran foto sedang diproses</span>
+			</div>
+			<button class="btn btn-primary float-right ml-auto" type="submit"
+				@click.prevent="onPhotoSubmit">
+				Submit
+			</button>
+		</div>
 	</div>
 </template>
 <script>
@@ -50,6 +60,7 @@ export default {
 				tags: [],
 				photoManager: '',
 			},
+			isProcessing: false,
 		};
 	},
 	created() {
@@ -71,6 +82,7 @@ export default {
 			this.photo.image = this.imageFile.name;
 		},
 		async onPhotoSubmit() {
+			this.isProcessing = true;
 			const tagsArr = this.tagsInput.split(',');
 			const tagSet = new Set();
 
@@ -97,6 +109,8 @@ export default {
 					.send({ from: this.activeAccount });
 			} catch (error) {
 				console.errror('Gagal Submit foto', error);
+			} finally {
+				this.isProcessing = false;
 			}
 		},
 	},

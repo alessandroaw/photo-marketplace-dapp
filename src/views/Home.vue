@@ -3,6 +3,14 @@
         <app-search-bar @searchTag="filterPhoto"></app-search-bar>
         <section class="album py-5">
             <div class="container">
+				<div v-if="isProcessing" class="alert alert-warning d-flex justify-content-center align-items-center">
+					<span class="mr-2">
+						Transaksi sedang diproses
+					</span>
+					<div class="spinner-border text-warning">
+						<span class="sr-only">Loading...</span>
+					</div>
+				</div>
                 <div class="row">
 					<app-photo
 						v-for="(photo, index) in filteredPhotos"
@@ -34,6 +42,7 @@ export default {
 		return {
 			photos: [],
 			filteredPhotos: [],
+			isProcessing: false,
 		};
 	},
 	computed: {
@@ -43,6 +52,7 @@ export default {
 	methods: {
 		async orderPhoto(index) {
 			// SC Params : ImageHash
+			this.isProcessing = true;
 			const choosen = this.filteredPhotos[index];
 			this.createPhotoManagerContract(choosen.photoManager);
 			try {
@@ -66,10 +76,15 @@ export default {
 				const response = await axios.post('/order', payload);
 			} catch (error) {
 				console.error('Gagal membeli foto');
+			} finally {
+				this.isProcessing = false;
 			}
 		},
 		filterPhoto(tag) {
-			// if (tag === '')
+			if (tag === '') {
+				this.filteredPhotos = this.photos;
+				return;
+			}
 			this.filteredPhotos = this.photos.filter((photo) => photo.tags.includes(tag));
 		},
 	},

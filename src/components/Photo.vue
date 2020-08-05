@@ -28,6 +28,7 @@ export default {
 			description: String,
 			tags: Array,
 			price: Number,
+			isProcessing: Boolean,
 		},
 	},
 	methods: {
