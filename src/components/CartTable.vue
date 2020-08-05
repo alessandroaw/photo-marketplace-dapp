@@ -5,24 +5,31 @@
 				<th>Images</th>
 				<th>Payment address</th>
 				<th>Price</th>
-				<!-- <th>
-					<a href="#" class="badge-danger badge p-1">
-						<i class="fas fa-trash">Delete</i>
-					</a>
-				</th> -->
 				<th></th>
 			</thead>
 			<tbody>
-				<tr v-for="(order, index) in filteredOrder" :key="index">
-					<td>{{order.imageId}}</td>
+				<tr v-for="(order, index) in orders" :key="index">
+					<td>{{order.imageId.image}}</td>
 					<td>
 						<a href="#">
 							{{order.paymentAddress}}
 						</a>
 					</td>
-					<td>Wei {{order.price}}</td>
-					<td v-if="order.paid"><a href="#" class="btn btn-primary">unduh</a></td>
-					<td v-else><a href="#" class="btn btn-success">bayar</a></td>
+					<td>Wei {{order.imageId.price}}</td>
+					<td v-if="order.paid">
+						<button
+							@click="onDownloadButtonClick(index)"
+							class="btn btn-primary">
+							unduh
+						</button>
+					</td>
+					<td v-else>
+						<button
+							class="btn btn-success"
+							@click="onPayButtonClick(index)">
+							bayar
+						</button>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -34,14 +41,16 @@ export default {
 		orders: Array,
 		showPaid: Boolean,
 	},
-	data() {
-		return {
-			filteredOrder: [],
-		};
-	},
-	created() {
-		this.filteredOrder = this.orders.filter((order) => order.paid === this.showPaid);
-		console.table(this.filteredOrder);
+	methods: {
+		onDownloadButtonClick(index) {
+			console.log(this.orders[index]);
+			const { imagePath } = this.orders[index].imageId;
+			const url = `http://localhost:3000/${imagePath}`;
+			window.open(url);
+		},
+		onPayButtonClick(index) {
+			this.$emit('payOrder', index);
+		},
 	},
 };
 </script>

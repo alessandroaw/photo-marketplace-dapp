@@ -63,7 +63,7 @@ export default {
 					imageId: choosen._id,
 				};
 
-				const temp = await axios.post('/order', payload);
+				const response = await axios.post('/order', payload);
 			} catch (error) {
 				console.error('Gagal membeli foto');
 			}
@@ -73,18 +73,21 @@ export default {
 			this.filteredPhotos = this.photos.filter((photo) => photo.tags.includes(tag));
 		},
 	},
-	created() {
-		axios.get('/photo').then((result) => {
+	async created() {
+		try {
+			const response = await axios.get('/photo');
 			// const baseURL = 'https://photo-markeplace-service.herokuapp.com/';
 			const baseURL = 'http://localhost:3000/';
-			this.photos = result.data.map((photo) => ({
+
+			this.photos = response.data.map((photo) => ({
 				...photo,
 				imgSrc: baseURL + encodeURI(photo.imagePath),
 			}));
+
 			this.filteredPhotos = [...this.photos];
-		}).catch((error) => {
-			console.error(error);
-		});
+		} catch (error) {
+			console.error('Gagal mendapatkan foto', error);
+		}
 	},
 };
 </script>

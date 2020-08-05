@@ -2,7 +2,7 @@
 	<div class="col-md-6 text-center">
 		<h2>Anda bukan fotografer</h2>
 		<p>Daftar menjadi photographer?</p>
-		<button @click.prevent="enlistPhotographer" class="btn btn-primary btn-block">
+		<button @click.prevent="onEnlistButtonClick" class="btn btn-primary btn-block">
 			Daftar
 		</button>
 	</div>
@@ -16,7 +16,7 @@ export default {
 		...mapGetters('accounts', ['activeAccount']),
 	},
 	methods: {
-		async enlistPhotographer() {
+		async onEnlistButtonClick() {
 			try {
 				const result = await this.drizzleInstance
 					.contracts.AccountManager

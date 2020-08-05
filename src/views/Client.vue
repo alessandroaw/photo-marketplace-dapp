@@ -9,10 +9,16 @@
 			<section class="cart py-5">
 				<div class="container">
 					<div class="row justify-content-center">
-						<div class="col-lg-10">
+						<div class="col-md-12">
 							<cart-table
+								v-if="orders.length !== 0"
 								:orders="orders"
-								:showPaid="showPaid"></cart-table>
+								:showPaid="showPaid"
+								@payOrder="onPayOrder">
+							</cart-table>
+							<div v-else class="alert alert-danger text-center" role="alert">
+								Order tidak ditemukan untuk klien {{this.activeAccount}}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -21,24 +27,76 @@
 	</div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
+import axios from '@/common/api.service';
+import contractMixin from '@/common/contract.mixin';
 import CartTable from '@/components/CartTable.vue';
 
-const tempOrder = {
-	paid: false,
-	clientAddress: '0x81e228905ce51B472B049177BB78Fa630078C4A5',
-	paymentAddress: '0xCB55CA50d62FBEE8ecFD2a849d821E7500a35f88',
-	imageId: '5f225edc52b8622bbf8cb162',
-};
-
 export default {
+	mixins: [contractMixin],
 	components: {
 		CartTable,
+	},
+	computed: {
+		...mapGetters('accounts', ['activeAccount']),
+		...mapGetters('drizzle', ['drizzleInstance']),
 	},
 	data() {
 		return {
 			showPaid: false,
-			orders: [tempOrder, tempOrder, tempOrder],
+			orders: [],
 		};
+	},
+	methods: {
+		async onPayOrder(index) {
+			const order = this.orders[index];
+			const { paymentAddress } = order;
+			const { photoManager } = order.imageId;
+
+			this.createPhotoManagerContract(photoManager);
+
+			const result = await this.drizzleInstance
+				.web3.eth
+				.sendTransaction({
+					from: this.activeAccount,
+					to: paymentAddress,
+					value: `${order.imageId.price}`,
+				});
+			console.log(result);
+		},
+	},
+	async created() {
+		console.log(this.drizzleInstance);
+		try {
+			const response = await axios.get(`/order/${this.activeAccount}`);
+			this.orders = response.data;
+		} catch (error) {
+			console.error('Gagal mendapatkan order', error);
+		}
+	},
+	mounted() {
+		this.$drizzleEvents.$on('drizzle/contractEvent', async (event) => {
+			if (event.contractName === 'PhotoManager' && event.eventName === 'LicensingProcess') {
+				const { data } = event;
+				const updatedOrder = this.orders.find((order) => (
+					order.paymentAddress === data.paymentAddress
+				));
+
+				if (typeof updatedOrder !== 'undefined') {
+					// TODO: MAKE PATCH REQUEST
+					console.log(data);
+					console.log(updatedOrder);
+					if (updatedOrder.paid === data.paid) return;
+
+					try {
+						await axios.post(`/order/${updatedOrder._id}`);
+						updatedOrder.paid = data.paid;
+					} catch (error) {
+						console.error('Gagal mengupdate order', error);
+					}
+				}
+			}
+		});
 	},
 };
 </script>
