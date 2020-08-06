@@ -13,17 +13,17 @@
 		</div>
 		<div class="form-group">
 			<label class="label text-secondary" for="description">Deskripsi foto</label>
-			<input :value="photo.description" type="text" class="form-control" id="description">
+			<input v-model="photo.description" type="text" class="form-control" id="description">
 			<small class="form-text text-muted">Deskripsi dari foto</small>
 		</div>
 		<div class="form-group">
 			<label class="label text-secondary" for="price">Harga</label>
-			<input :value="photo.price" type="number" class="form-control" id="price">
+			<input v-model="photo.price" type="number" class="form-control" id="price">
 			<small class="form-text text-muted">Harga dalam wei</small>
 		</div>
 		<div class="form-group">
 			<label class="label text-secondary" for="tags">Tag foto</label>
-			<input :value="tagsInput" type="text" class="form-control" id="tags">
+			<input v-model="tagsInput" type="text" class="form-control" id="tags">
 			<small class="form-text text-muted">Tag untuk pencarian foto</small>
 		</div>
 		<div class="d-flex justify-content-between">
@@ -82,6 +82,11 @@ export default {
 			this.photo.image = this.imageFile.name;
 		},
 		async onPhotoSubmit() {
+			if (this.imageFile === null) {
+				alert('Pilih foto terlebih dahulu');
+				return;
+			}
+
 			this.isProcessing = true;
 			const tagsArr = this.tagsInput.split(',');
 			const tagSet = new Set();
@@ -108,7 +113,7 @@ export default {
 					.methods.createPhoto(data.image, data.price)
 					.send({ from: this.activeAccount });
 			} catch (error) {
-				console.errror('Gagal Submit foto', error);
+				console.error('Gagal Submit foto', error);
 			} finally {
 				this.isProcessing = false;
 			}

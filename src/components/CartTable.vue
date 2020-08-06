@@ -11,7 +11,7 @@
 				<tr v-for="(order, index) in orders" :key="index">
 					<td>{{order.imageId.image}}</td>
 					<td>
-						<a href="#">
+						<a>
 							{{order.paymentAddress}}
 						</a>
 					</td>

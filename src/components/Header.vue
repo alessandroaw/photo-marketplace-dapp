@@ -2,7 +2,10 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <a href="#" class="navbar-brand logo-font">DSPM</a>
+        <router-link
+          href="#"
+          class="navbar-brand logo-font"
+          :to="{ name: 'home' }">DSPM</router-link>
         <button class="navbar-toggler" type="button"
           data-toggle="collapse" data-target="#navbarMenu">
           <span class="navbar-toggler-icon"></span>

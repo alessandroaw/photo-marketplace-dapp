@@ -1,8 +1,8 @@
 <template>
-	<div class="col-md-6 text-center">
-		<h2>Anda bukan fotografer</h2>
-		<p>Daftar menjadi photographer?</p>
-		<button @click.prevent="onEnlistButtonClick" class="btn btn-primary btn-block">
+	<div class="alert alert-warning col-md-6 text-center">
+		<h2>Akun fotografer tidak ditemukan</h2>
+		<p>Daftar menjadi fotografer?</p>
+		<button @click.prevent="onEnlistButtonClick" class="btn btn-success btn-block">
 			Daftar
 		</button>
 	</div>

@@ -3,7 +3,9 @@
         <app-search-bar @searchTag="filterPhoto"></app-search-bar>
         <section class="album py-5">
             <div class="container">
-				<div v-if="isProcessing" class="alert alert-warning d-flex justify-content-center align-items-center">
+				<div
+					v-if="isProcessing"
+					class="alert alert-warning d-flex justify-content-center align-items-center">
 					<span class="mr-2">
 						Transaksi sedang diproses
 					</span>

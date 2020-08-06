@@ -1,15 +1,19 @@
 <template>
 	<main class="photographer container py-5">
 		<form>
-			<div class="row justify-content-center">
-				<enlist-photographer v-if="!isPhotographer"
+			<div v-if="!isPhotographer" class="row justify-content-center">
+				<enlist-photographer
 					@photographerListed="loadPhotoManager">
 				</enlist-photographer>
-				<div v-else class="col-md-6">
+			</div>
+			<div v-else class="row justify-content-center">
+				<div class="col-md-6">
 					<photo-manager-status
 						:address="photoManagerAddress"
-						:balance="photoManagerBalance">
+						:balance="photoManagerBalance"
+						@withdrawBalance="withdrawBalance">
 					</photo-manager-status>
+					<hr>
 					<photo-submit-form
 						:address="photoManagerAddress">
 					</photo-submit-form>
@@ -37,7 +41,7 @@ export default {
 	data() {
 		return {
 			photoManagerAddress: NULL_ADDRESS,
-			photoManagerBalance: 100,
+			photoManagerBalance: '0',
 		};
 	},
 	computed: {
@@ -49,20 +53,50 @@ export default {
 	},
 	async created() {
 		// Initializing PhotoManager if isPhotographer
-		this.photoManagerAddress = await this.drizzleInstance
-			.contracts.AccountManager
-			.methods.getPhotoManager(this.activeAccount)
-			.call({ from: this.activeAccount });
+		try {
+			this.photoManagerAddress = await this.drizzleInstance
+				.contracts.AccountManager
+				.methods.getPhotoManager(this.activeAccount)
+				.call({ from: this.activeAccount });
 
-		if (this.isPhotographer) {
-			await this.createPhotoManagerContract(this.photoManagerAddress);
+			if (this.isPhotographer) {
+				this.loadPhotoManager(this.photoManagerAddress);
+			}
+		} catch (error) {
+			console.error('Gagal memuat PhotoManager', error);
 		}
 	},
 	methods: {
 		async loadPhotoManager(photoManagerAddress) {
 			this.photoManagerAddress = photoManagerAddress;
-			// TODO LOAD PHOTO MANAGER CONTRACT
-			await this.createPhotoManagerContract(this.photoManagerAddress);
+			try {
+				await this.createPhotoManagerContract(this.photoManagerAddress);
+				await this.getPhotoManagerBalance();
+			} catch (error) {
+				console.error('Gagal memuat PhotoManager', error);
+			}
+		},
+		async getPhotoManagerBalance() {
+			try {
+				await this.createPhotoManagerContract(this.photoManagerAddress);
+				this.photoManagerBalance = await this.drizzleInstance
+					.contracts.PhotoManager
+					.methods.getBalance()
+					.call({ from: this.activeAccount });
+			} catch (error) {
+				console.error('Gagal memuat saldo', error);
+			}
+		},
+		async withdrawBalance() {
+			try {
+				await this.drizzleInstance
+					.contracts.PhotoManager
+					.methods.withdrawMoney()
+					.send({ from: this.activeAccount });
+				await this.getPhotoManagerBalance();
+			} catch (error) {
+				console.error('Gagal menarik saldo', error);
+			}
 		},
 	},
 };

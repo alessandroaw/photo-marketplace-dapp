@@ -55,18 +55,20 @@ export default {
 
 			this.createPhotoManagerContract(photoManager);
 
-			const result = await this.drizzleInstance
-				.web3.eth
-				.sendTransaction({
-					from: this.activeAccount,
-					to: paymentAddress,
-					value: `${order.imageId.price}`,
-				});
-			console.log(result);
+			try {
+				const result = await this.drizzleInstance
+					.web3.eth
+					.sendTransaction({
+						from: this.activeAccount,
+						to: paymentAddress,
+						value: `${order.imageId.price}`,
+					});
+			} catch (error) {
+				console.error('Gagal melakukan pembayaran', error);
+			}
 		},
 	},
 	async created() {
-		console.log(this.drizzleInstance);
 		try {
 			const response = await axios.get(`/order/${this.activeAccount}`);
 			this.orders = response.data;
@@ -83,9 +85,6 @@ export default {
 				));
 
 				if (typeof updatedOrder !== 'undefined') {
-					// TODO: MAKE PATCH REQUEST
-					console.log(data);
-					console.log(updatedOrder);
 					if (updatedOrder.paid === data.paid) return;
 
 					try {
