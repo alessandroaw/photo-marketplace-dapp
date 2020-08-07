@@ -110,7 +110,7 @@ export default {
 				// TODO SEND ADDPHOTO TRANSACTION THROUGH PHOTOMANAGER CONTRACT
 				const result = await this.drizzleInstance
 					.contracts.PhotoManager
-					.methods.createPhoto(data.image, data.price)
+					.methods.createPhoto(data.imageHash, data.price)
 					.send({ from: this.activeAccount });
 			} catch (error) {
 				console.error('Gagal Submit foto', error);
