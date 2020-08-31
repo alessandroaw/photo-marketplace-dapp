@@ -11,7 +11,7 @@
 					href="#" @click="onTagClick(tag)" class="badge badge-info mr-1">{{tag}}</a>
 				</p>
 				<div class="d-flex justify-content-between align-items-center">
-					<strong class="text-muted">WEI {{photo.price}}</strong>
+					<strong class="text-muted">ETH {{photo.price}}</strong>
 					<button @click="onPhotoClick" class="btn btn-success">Beli</button>
 				</div>
 			</div>

@@ -18,7 +18,7 @@
 				</tr>
 				<tr>
 					<th >Saldo</th>
-					<td>Wei {{balance}}</td>
+					<td>ETH {{balance}}</td>
 				</tr>
 			</tbody>
 		</table>

@@ -19,7 +19,7 @@
 		<div class="form-group">
 			<label class="label text-secondary" for="price">Harga</label>
 			<input v-model="photo.price" type="number" class="form-control" id="price">
-			<small class="form-text text-muted">Harga dalam wei</small>
+			<small class="form-text text-muted">Harga dalam eth</small>
 		</div>
 		<div class="form-group">
 			<label class="label text-secondary" for="tags">Tag foto</label>
@@ -56,7 +56,7 @@ export default {
 			photo: {
 				image: 'Pilih berkas foto',
 				description: 'keluarga di pantai',
-				price: 100,
+				price: 1,
 				tags: [],
 				photoManager: '',
 			},
@@ -110,13 +110,17 @@ export default {
 				// TODO SEND ADDPHOTO TRANSACTION THROUGH PHOTOMANAGER CONTRACT
 				const result = await this.drizzleInstance
 					.contracts.PhotoManager
-					.methods.createPhoto(data.imageHash, data.price)
+					.methods.createPhoto(data.imageHash, this.ethToWei(data.price))
 					.send({ from: this.activeAccount });
+				console.log(result);
 			} catch (error) {
 				console.error('Gagal Submit foto', error);
 			} finally {
 				this.isProcessing = false;
 			}
+		},
+		ethToWei(value) {
+			return this.drizzleInstance.web3.utils.toWei(`${value}`, 'ether');
 		},
 	},
 };
