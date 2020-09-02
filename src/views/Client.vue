@@ -52,6 +52,8 @@ export default {
 			const order = this.orders[index];
 			const { paymentAddress } = order;
 			const { photoManager } = order.imageId;
+			const priceInWei = this.drizzleInstance
+				.web3.utils.toWei(`${order.imageId.price}`, 'ether');
 
 			this.createPhotoManagerContract(photoManager);
 
@@ -61,7 +63,7 @@ export default {
 					.sendTransaction({
 						from: this.activeAccount,
 						to: paymentAddress,
-						value: `${order.imageId.price}`,
+						value: priceInWei,
 					});
 			} catch (error) {
 				console.error('Gagal melakukan pembayaran', error);

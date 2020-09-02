@@ -4,7 +4,7 @@
 		<h1 class="logo-font">Cari Foto Stok</h1>
 		<!-- <p class="lead text-muted">Cari foto yang anda inginkan</p> -->
 		<form @submit.prevent="searchTag(searchValue)" class="form-group d-flex justify-content-center">
-			<input class="form-control text-center" :value="searchValue" style="width: 50%"
+			<input class="form-control text-center" v-model="searchValue" style="width: 50%"
 			placeholder="Kata kunci" type="search" name="search" id="search">
 		</form>
 		<div class="d-flex justify-content-center">

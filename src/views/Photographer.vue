@@ -79,10 +79,12 @@ export default {
 		async getPhotoManagerBalance() {
 			try {
 				await this.createPhotoManagerContract(this.photoManagerAddress);
-				this.photoManagerBalance = await this.drizzleInstance
+				const balanceInWei = await this.drizzleInstance
 					.contracts.PhotoManager
 					.methods.getBalance()
 					.call({ from: this.activeAccount });
+				this.photoManagerBalance = this.drizzleInstance
+					.web3.utils.fromWei(balanceInWei, 'ether');
 			} catch (error) {
 				console.error('Gagal memuat saldo', error);
 			}

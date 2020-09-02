@@ -10,7 +10,7 @@ const options = {
 	},
 	contracts: [AccountManager],
 	events: {
-		// AccountManager: ['DataChanged'],
+		AccountManager: ['PhotographerListing'],
 	},
 	pols: {
 		accounts: 15000,

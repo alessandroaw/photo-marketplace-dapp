@@ -15,7 +15,7 @@
 							{{order.paymentAddress}}
 						</a>
 					</td>
-					<td>Wei {{order.imageId.price}}</td>
+					<td>ETH {{order.imageId.price}}</td>
 					<td v-if="order.paid">
 						<button
 							@click="onDownloadButtonClick(index)"

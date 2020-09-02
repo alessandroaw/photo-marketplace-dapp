@@ -22,7 +22,7 @@ export default {
 					.contracts.AccountManager
 					.methods.addPhotographer()
 					.send({ from: this.activeAccount });
-				const photoManager = result.events.PhotographerListing.returnValues.PhotoManager;
+				const { photoManager } = result.events.PhotographerListing.returnValues;
 				this.$emit('photographerListed', photoManager);
 			} catch (error) {
 				console.error('Gagal mengirimkan transaksi', error);
